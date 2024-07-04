@@ -33,7 +33,11 @@ public class PasseioCavaloHeuristica {
         this.contador = 1;
     }
     
-    public void Acessibilidade(){
+    /*
+    Método dinamico para verificar o melhor local do cavalo baseado no
+    tabuleiro de acessibilidade
+    */
+    public void verificarAcesso(){
         int prioridade = 9;
         int x = currentRow;
         int y = currentColumn;
@@ -85,6 +89,9 @@ public class PasseioCavaloHeuristica {
         }
     }
     
+    /*
+    método dinamico para movimentar o cavalo pelo tabuleiro
+    */
     public void movimentarCavalo( ){
         System.out.println("["+currentRow+"]["+currentColumn+"]");
         for(moveNumber = 0; moveNumber < 8; moveNumber++){
@@ -99,7 +106,7 @@ public class PasseioCavaloHeuristica {
 /*Linha*/         [currentRow+horizontal[moveNumber]]
 /*Coluna*/        [currentColumn+vertical[moveNumber]]!=1)
                 {
-                    Acessibilidade();
+                    verificarAcesso();
                     moveNumber = -1;  
                 }
                 
