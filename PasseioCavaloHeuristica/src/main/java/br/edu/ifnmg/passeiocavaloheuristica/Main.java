@@ -7,7 +7,10 @@ package br.edu.ifnmg.passeiocavaloheuristica;
 public class Main {
 
     public static void main(String[] args) {
+        
+        PasseioCavaloHeuristica cavalo = new PasseioCavaloHeuristica(0, 0);
        
+        cavalo.movimentarCavalo();
     }
     
 }
