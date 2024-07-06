@@ -33,48 +33,32 @@ public class PasseioCavaloHeuristica {
         this.contador = 1;
     }
     
-    /*
-    Método dinamico para verificar o melhor local do cavalo baseado no
-    tabuleiro de acessibilidade
-    */
-    public void verificarAcesso(){
-        int prioridade = 9;
-        int x = currentRow;
-        int y = currentColumn;
-        //Como ele vai pelo menor numero de acessibilidade, add um valor maior
-        for(int i = 0; i < 8; i++){
-            //Verifica se está dentro do tabuleiro
-            if(currentColumn+vertical[i] > -1
-               && currentRow+horizontal[i] > -1
-               && currentColumn+vertical[i] < 8
-               && currentRow+horizontal[i] < 8)
+    /**
+     * Metódo dinamico usado pra verificar se o cavalo pode ir para aquela casa
+     * @return boolean 
+     */
+    private boolean validarCasa(){
+        //Verifica se está dentro do tabuleiro
+        if(currentColumn+vertical[moveNumber] > -1
+           && currentRow+horizontal[moveNumber] > -1
+           && currentColumn+vertical[moveNumber] < 8
+           && currentRow+horizontal[moveNumber] < 8)
+        {
+            //vertifica se já passou pela casa
+            if(tabuleiro
+/*Linha*/     [currentRow+horizontal[moveNumber]]
+/*Coluna*/    [currentColumn+vertical[moveNumber]]==0)
             {
-                //vertifica se já passou pela casa
-                if(tabuleiro
-/*Linha*/         [currentRow+horizontal[i]]
-/*Coluna*/        [currentColumn+vertical[i]]!=1)
-                {
-                    if(accessibility
-/*Linha*/             [currentRow+horizontal[i]]
-/*Coluna*/            [currentColumn+vertical[i]]<prioridade)
-                    {
-                        
-                        prioridade = accessibility
-/*Linha*/               [currentRow+horizontal[i]]
-/*Coluna*/              [currentColumn+vertical[i]];
-                        x = currentRow+horizontal[i];
-                        y = currentColumn+vertical[i];
-                        //Salvamos em variaveis, para não alterar outras verificações
-                    }
-                }
-            }
+                return true;
+            }   
         }
-        currentRow = x;
-        currentColumn = y;
-        tabuleiro[currentRow][currentColumn] = 1;
-        System.out.println("["+currentRow+"]["+currentColumn+"]");
-        contador+=1;
-        
+        return false;
+    }
+    /**
+     * Metodo para diminuir a acessibilidade das casas em volta da casa
+     * selecionada.
+     */
+    private void diminuirAcessibilidade(){   
         for(int j = 0; j < 8; j++){
             //Verifica se está dentro do tabuleiro
             if(currentColumn+vertical[j] > -1
@@ -89,31 +73,65 @@ public class PasseioCavaloHeuristica {
         }
     }
     
-    /*
-    método dinamico para movimentar o cavalo pelo tabuleiro
+    /**
+    *Método dinamico para verificar o melhor local do cavalo baseado no
+     tabuleiro de acessibilidade.
     */
-    public void movimentarCavalo( ){
-        System.out.println("["+currentRow+"]["+currentColumn+"]");
+    private void verificarAcesso(){
+        int prioridade = 9;
+        //Como ele vai pelo menor numero de acessibilidade, add um valor maior
+        
+        int x = currentRow;
+        int y = currentColumn;
         for(moveNumber = 0; moveNumber < 8; moveNumber++){
-            //Verifica se está dentro do tabuleiro
-            if(currentColumn+vertical[moveNumber] > -1
-               && currentRow+horizontal[moveNumber] > -1
-               && currentColumn+vertical[moveNumber] < 8
-               && currentRow+horizontal[moveNumber] < 8)
-            {
-                //vertifica se já passou pela casa
-                if(tabuleiro
-/*Linha*/         [currentRow+horizontal[moveNumber]]
-/*Coluna*/        [currentColumn+vertical[moveNumber]]!=1)
+            if(validarCasa()){
+                //IF abaixo verifica a casa q tem menor acessibilidade no tabuleiro
+                if(accessibility
+/*Linha*/             [currentRow+horizontal[moveNumber]]
+/*Coluna*/            [currentColumn+vertical[moveNumber]]<prioridade)
                 {
-                    verificarAcesso();
-                    moveNumber = -1;  
+                    prioridade = accessibility
+/*Linha*/               [currentRow+horizontal[moveNumber]]
+/*Coluna*/              [currentColumn+vertical[moveNumber]];
+                    x = currentRow+horizontal[moveNumber];
+                    y = currentColumn+vertical[moveNumber];
+                    //Salvamos em variaveis, para não alterar outras verificações
                 }
-                
             }
         }
-        
-        System.out.println(contador);
+        currentRow = x;
+        currentColumn = y;
+        contador+=1;
+        tabuleiro[currentRow][currentColumn] = contador;
+        diminuirAcessibilidade();
     }
     
+    /**
+     * Método para printar o tabuleiro com os movimentos que o cavalo fez
+     * Primeiro movimento igual 1, segundo 2 e assim por diante..
+     */
+    public void printarTabuleiro(){
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                System.out.printf("[%2d]", tabuleiro[i][j]);
+            }
+            System.out.println("");
+        }
+    }
+
+    /**
+     * método dinamico para movimentar o cavalo pelo tabuleiro.
+     */
+    public void movimentarCavalo( ){
+        for(moveNumber = 0; moveNumber < 8; moveNumber++){
+            if(validarCasa()){
+                verificarAcesso();
+                moveNumber = -1;  
+            }   
+        }
+        printarTabuleiro();
+        System.out.println("Quantidade de casas visitdas: "+contador);
+    }
 }
+    
+
